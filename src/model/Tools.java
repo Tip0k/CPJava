@@ -13,36 +13,65 @@ import java.io.File;
  */
 public class Tools {
 
-    public static final int MAX_INT = 999999;
+    public static final int MAX_INT = 999_999_999;
 
     public static String getCurrentDirectory() {
         return new File(".").getAbsolutePath().substring(0, new File(".").getAbsolutePath().length() - 2);
     }
 
-    public static float stringToFloat(String floatS) throws IllegalArgumentException {
+    public static int convertAndPowToX(String string, int pow) throws IllegalArgumentException {//кіло-дабл в інт
         try {
-            floatS.replaceAll(",", ".");
-            int intPart = Integer.parseInt(floatS.substring(0, floatS.indexOf(".")));
-            if (intPart > MAX_INT) {
+            int intPart;
+            String floatPart = "";
+
+            string = string.replace(',', '.');
+            if (!string.contains(".")) {
+                intPart = Integer.parseInt(string);
+                for (int i = 0; i < pow; i++) {
+                        floatPart += "0";
+                    }
+            } else {
+                intPart = Integer.parseInt(string.substring(0, string.indexOf(".")));
+                floatPart = string.substring(string.indexOf(".") + 1, string.length());
+                int length = floatPart.length();
+                if (length < pow) {
+                    for (int i = 0; i < pow - length; i++) {
+                        floatPart += "0";
+                    }
+                } else if (length > pow) {
+                    floatPart = floatPart.substring(0, pow);
+                }
+            }
+            if (intPart > (MAX_INT / (int) Math.pow(10.0d, pow))) {
                 throw new IllegalArgumentException();
             }
-            String floatPart = (Integer.parseInt(floatS.substring(floatS.indexOf(".") + 1, floatS.length())) + "").substring(0, 2);
-            return Float.parseFloat(intPart + "." + floatPart);
+            int result = Integer.parseInt(intPart + "" + floatPart);
+            if(result > 0) {
+                return result;
+            } else {
+                throw new IllegalArgumentException();
+            }
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex.getMessage());
         }
     }
 
-    public static int floatToInt(float floatF, int pow) throws IllegalArgumentException {
+    public static String convertAndPowFromX(int integer, int pow) throws IllegalArgumentException {
         try {
-            floatF *= pow;
-            return Math.round(floatF);
+            return (integer / Math.pow(10.0d, pow)) + "";
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex.getMessage());
         }
     }
 
     public static void main(String[] args) {
-        System.out.println(stringToFloat("0.123456"));
+        System.out.println(convertAndPowToX("4", 3));
+        System.out.println(convertAndPowFromX(convertAndPowToX("4", 3), 3));
+        System.out.println(convertAndPowToX("4,5", 3));
+        System.out.println(convertAndPowFromX(convertAndPowToX("4,5", 3), 3));
+        System.out.println(convertAndPowToX("4,12345", 3));
+        System.out.println(convertAndPowFromX(convertAndPowToX("4,12345", 3), 3));
+        System.out.println(convertAndPowToX("4,01", 2));
+        System.out.println(convertAndPowFromX(convertAndPowToX("4,01", 2), 2));
     }
 }

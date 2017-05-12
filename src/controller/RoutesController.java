@@ -9,6 +9,7 @@ import java.sql.Statement;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import model.Tools;
 import view.MainView;
 
 public class RoutesController {
@@ -38,7 +39,7 @@ public class RoutesController {
         }.start();
     }
 
-    public void updateTableRoutes(JTable table) {//length = 
+    public void updateTableRoutes(JTable table) {
         try {
             table.setModel(new RoutesTableModel());
             table.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -126,24 +127,13 @@ public class RoutesController {
                     case 2:
                         return resultSet.getString("routesEndPoint");
                     case 3:
-                        return (float) resultSet.getInt("routesDistance") / 1000;
+                        return Tools.convertAndPowFromX(resultSet.getInt("routesDistanceM"), 3);
                     default:
                         return "Error";
                 }
             } catch (Exception ex) {
                 return "Error";
             }
-
-//            switch (columnIndex) {
-//                case 0:
-//                    return routesStartPoints.get(rowIndex);
-//                case 1:
-//                    return routesEndPoints.get(rowIndex);
-//                case 2:
-//                    return routesDistances.get(rowIndex);
-//                default:
-//                    return "";
-//            }
         }
 
         @Override

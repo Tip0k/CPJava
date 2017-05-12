@@ -8,6 +8,7 @@ import java.sql.Statement;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import model.Tools;
 import view.MainView;
 
 public class CarsController {
@@ -40,7 +41,7 @@ public class CarsController {
         }
     }
 
-    public void addCar(String name, String type, int maxWkg, int maxWm, int maxHm, int maxLm) {
+    public void addCar(String name, String type, int maxWg, int maxWcm, int maxHcm, int maxLcm) {
         new Thread() {
             @Override
             public void run() {
@@ -50,10 +51,10 @@ public class CarsController {
                             "insert into cars values(null, ?, ?, ?, ?, ?, ?)");
                     preparedStatement.setString(1, name);
                     preparedStatement.setString(2, type);
-                    preparedStatement.setInt(3, maxWkg);
-                    preparedStatement.setInt(4, maxWm);
-                    preparedStatement.setInt(5, maxHm);
-                    preparedStatement.setInt(6, maxLm);
+                    preparedStatement.setInt(3, maxWg);
+                    preparedStatement.setInt(4, maxWcm);
+                    preparedStatement.setInt(5, maxHcm);
+                    preparedStatement.setInt(6, maxLcm);
                     preparedStatement.executeUpdate();
                 } catch (Exception ex) {
                     MainView.showErrorPane("Не вдалось додати запис у БД.", ex);
@@ -154,9 +155,11 @@ public class CarsController {
                     case 2:
                         return resultSet.getString("carTypesType");
                     case 3:
-                        return resultSet.getInt("carsMaxWkg");
+                        return Tools.convertAndPowFromX(resultSet.getInt("carsMaxWg"), 3);
                     case 4:
-                        return "" + resultSet.getInt("carsMaxWm") + "x" + resultSet.getInt("carsMaxHm") + "x" + resultSet.getInt("carsMaxLm");
+                        return Tools.convertAndPowFromX(resultSet.getInt("carsMaxWcm"), 2)
+                                + " x " + Tools.convertAndPowFromX(resultSet.getInt("carsMaxHcm"), 2)
+                                + " x " + Tools.convertAndPowFromX(resultSet.getInt("carsMaxLcm"), 2);
                     default:
                         return "Error";
                 }

@@ -7,6 +7,7 @@ package view;
 
 import java.awt.Color;
 import controller.CarsController;
+import model.Tools;
 
 /**
  *
@@ -180,11 +181,11 @@ public class AddCarView extends javax.swing.JInternalFrame implements Runnable {
         try {
             String name;
             String type;
-            int maxWkg;
-            int maxWm;
-            int maxHm;
-            int maxLm;
-            maxWkg = maxWm = maxHm = maxLm = -1;
+            int maxWg;
+            int maxWcm;
+            int maxHcm;
+            int maxLcm;
+            maxWg = maxWcm = maxHcm = maxLcm = -1;
 
             jTextField2.setBackground(Color.white);
             jTextField4.setBackground(Color.white);
@@ -193,57 +194,45 @@ public class AddCarView extends javax.swing.JInternalFrame implements Runnable {
             jTextField7.setBackground(Color.white);
 
             try {
-                if(jTextField4.getText().length() > 6) {
-                    throw new Exception();
-                }
-                maxWkg = Integer.parseInt(jTextField4.getText());
+                maxWg = Tools.convertAndPowToX(jTextField4.getText(), 3);
             } catch (Exception ex) {
                 jTextField4.setBackground(Color.red);
                 error = true;
             }
             try {
-                if(jTextField5.getText().length() > 6) {
-                    throw new Exception();
-                }
-                maxWm = Integer.parseInt(jTextField5.getText());
+                maxWcm = Tools.convertAndPowToX(jTextField5.getText(), 2);
             } catch (Exception ex) {
                 jTextField5.setBackground(Color.red);
                 error = true;
             }
             try {
-                if(jTextField6.getText().length() > 6) {
-                    throw new Exception();
-                }
-                maxHm = Integer.parseInt(jTextField6.getText());
+                maxHcm = Tools.convertAndPowToX(jTextField6.getText(), 2);
             } catch (Exception ex) {
                 jTextField6.setBackground(Color.red);
                 error = true;
             }
             try {
-                if(jTextField7.getText().length() > 6) {
-                    throw new Exception();
-                }
-                maxLm = Integer.parseInt(jTextField7.getText());
+                maxLcm = Tools.convertAndPowToX(jTextField7.getText(), 2);
             } catch (Exception ex) {
                 jTextField7.setBackground(Color.red);
                 error = true;
             }
-            
+
             name = jTextField2.getText();
-            
+
             if (name.length() < 3) {
                 jTextField2.setBackground(Color.red);
                 error = true;
             }
-            
+
             type = jComboBox1.getSelectedItem().toString();
-            
+
             if (error) {
                 throw new Exception();
             }
 
-            carsController.addCar(name, type, maxWkg, maxWm, maxHm, maxLm);
-            
+            carsController.addCar(name, type, maxWg, maxWcm, maxHcm, maxLcm);
+
             this.dispose();
         } catch (Exception ex) {
 

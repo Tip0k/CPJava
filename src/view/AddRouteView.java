@@ -9,6 +9,7 @@ import java.awt.Color;
 import model.Locality;
 import model.Regions;
 import controller.RoutesController;
+import model.Tools;
 
 /**
  *
@@ -187,11 +188,8 @@ public class AddRouteView extends javax.swing.JInternalFrame implements Runnable
         boolean error = false;
         try {
             try {
-                if(jTextField5.getText().length() > 6) {
-                    throw new Exception();
-                }
-                distance = (int)(Float.parseFloat(jTextField5.getText()) * 1000);
                 jTextField5.setBackground(Color.white);
+                distance = Tools.convertAndPowToX(jTextField5.getText(), 3);
             } catch (Exception ex) {
                 jTextField5.setBackground(Color.red);
                 error = true;
@@ -215,7 +213,7 @@ public class AddRouteView extends javax.swing.JInternalFrame implements Runnable
                     new Locality(jComboBox2.getSelectedItem().toString(), b), distance);
             this.dispose();
         } catch (Exception ex) {
-            
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

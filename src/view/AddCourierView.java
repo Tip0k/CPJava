@@ -6,15 +6,11 @@
 package view;
 
 import java.awt.Color;
-import model.Locality;
-import model.DataBaseConnection;
 import controller.CourierController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
@@ -226,7 +222,7 @@ public class AddCourierView extends javax.swing.JInternalFrame implements Runnab
 
             try {
                 carID = Integer.parseInt(jComboBox1.getSelectedItem().toString());
-            } catch (Exception ex) {                
+            } catch (Exception ex) {
                 error = true;
             }
 
