@@ -38,12 +38,15 @@ public class RoutesController {
         }.start();
     }
 
-    public void updateTableRoutes(JTable table) {
+    public void updateTableRoutes(JTable table) {//length = 
         try {
             table.setModel(new RoutesTableModel());
             table.getColumnModel().getColumn(0).setMaxWidth(50);
-            table.getColumnModel().getColumn(1).setMinWidth(180);
-            table.getColumnModel().getColumn(2).setMinWidth(180);
+            table.getColumnModel().getColumn(1).setMinWidth(150);
+            table.getColumnModel().getColumn(1).setMaxWidth(300);
+            table.getColumnModel().getColumn(2).setMinWidth(150);
+            table.getColumnModel().getColumn(2).setMaxWidth(300);
+            table.getColumnModel().getColumn(3).setMaxWidth(150);
             table.updateUI();
         } catch (Exception ex) {
             MainView.showErrorPane("Сталась помилка при завантаженні записів з БД.", ex);
@@ -61,23 +64,8 @@ public class RoutesController {
 
     public class RoutesTableModel extends AbstractTableModel {
 
-//        private ArrayList<String> routesStartPoints = new ArrayList<>();
-//        private ArrayList<String> routesEndPoints = new ArrayList<>();
-//        private ArrayList<Integer> routesDistances = new ArrayList<>();
         public RoutesTableModel() {
             super();
-//            try {
-//                Statement statement = connection.createStatement();
-//                ResultSet resultSet = statement.executeQuery("select * from routes");
-//
-//                while (resultSet.next()) {
-//                    routesStartPoints.add(resultSet.getString("routesStartPoint"));
-//                    routesEndPoints.add(resultSet.getString("routesEndPoint"));
-//                    routesDistances.add(resultSet.getInt("routesDistance"));
-//                }
-//            } catch (Exception ex) {
-//                System.out.println(ex.getMessage());
-//            }
         }
 
         @Override

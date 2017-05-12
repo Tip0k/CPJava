@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import model.Car;
 import view.MainView;
 import model.CourierStatus;
 
@@ -20,32 +19,6 @@ public class CourierController {
 
     public CourierController() {
         connection = DataBaseConnection.getConnection();
-    }
-
-    public Car[] getCars() {
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select cars.carsID, cars.carsName from cars\n"
-                    + "left outer join couriers\n"
-                    + "on cars.carsID = couriers.carsID\n"
-                    + "where couriers.carsID is null\n"
-                    + "order by cars.carsID desc");
-
-            int n = 0;
-            while (resultSet.next()) {
-                n++;
-            }
-            resultSet.first();
-            resultSet.previous();
-            Car[] cars = new Car[n];
-            n--;
-            while (resultSet.next()) {
-                cars[n--] = new Car(resultSet.getString("carsID"), resultSet.getString("carsName"));
-            }
-            return cars;
-        } catch (Exception ex) {
-            return null;
-        }
     }
 
     public String[] getFreeCarsID(String partOfID) {
@@ -68,16 +41,23 @@ public class CourierController {
             while (resultSet.next()) {
                 result[n--] = resultSet.getString("carsID");
             }
-            return result;
+            if (result.length > 0) {
+                return result;
+            } else {
+                return new String[]{"none"};
+            }
         } catch (Exception ex) {
-            return new String[]{"Error"};
+            return null;
         }
     }
 
     public String[] getFreeCarsName(String partOfName) {
         try {
+            if (partOfName.contains("#")) {
+                partOfName = partOfName.substring(0, partOfName.indexOf("#") - 1);
+            }
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select cars.carsName from cars\n"
+            ResultSet resultSet = statement.executeQuery("select cars.carsName, cars.carsID from cars\n"
                     + "left outer join couriers\n"
                     + "on cars.carsID = couriers.carsID\n"
                     + "where couriers.carsID is null and cars.carsName like \'%" + partOfName + "%\'\n"
@@ -92,63 +72,47 @@ public class CourierController {
             String[] result = new String[n];
             n--;
             while (resultSet.next()) {
-                result[n--] = resultSet.getString("carsName");
+                result[n--] = resultSet.getString("carsName") + " #" + resultSet.getString("carsID");
             }
-            return result;
+            if (result.length > 0) {
+                return result;
+            } else {
+                return new String[]{"none"};
+            }
         } catch (Exception ex) {
-            return new String[]{"Error"};
+            return null;
         }
     }
 
-    public String[] getCarsForID(String ID) {
+    public String getItemForID(String ID) {
         try {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("select cars.carsName from cars\n"
                     + "left outer join couriers\n"
                     + "on cars.carsID = couriers.carsID\n"
-                    + "where couriers.carsID is null and cars.carsID = " + ID + "\n"
-                    + "order by cars.carsName desc");
-
-            int n = 0;
-            while (resultSet.next()) {
-                n++;
-            }
-            resultSet.first();
-            resultSet.previous();
-            String[] result = new String[n];
-            n--;
-            while (resultSet.next()) {
-                result[n--] = resultSet.getString("carsName");
-            }
-            return result;
+                    + "where couriers.carsID is null and cars.carsID = " + ID + "\n");
+            resultSet.next();
+            return resultSet.getString("carsName") + " #" + ID;
         } catch (Exception ex) {
-            return new String[]{"Error"};
+            return null;
         }
     }
 
-    public String[] getCarsForName(String name) {
+    public String getItemForName(String name) {
         try {
+            if (name.contains("#")) {
+                return name.substring(name.indexOf("#") + 1, name.length());
+            }
+
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("select cars.carsID from cars\n"
                     + "left outer join couriers\n"
                     + "on cars.carsID = couriers.carsID\n"
-                    + "where couriers.carsID is null and cars.carsName = " + name + "\n"
-                    + "order by cars.carsID desc");
-
-            int n = 0;
-            while (resultSet.next()) {
-                n++;
-            }
-            resultSet.first();
-            resultSet.previous();
-            String[] result = new String[n];
-            n--;
-            while (resultSet.next()) {
-                result[n--] = resultSet.getString("carsID");
-            }
-            return result;
+                    + "where couriers.carsID is null and cars.carsName = " + name + "\n");
+            resultSet.next();
+            return resultSet.getString("carsID");
         } catch (Exception ex) {
-            return new String[]{"Error"};
+            return null;
         }
     }
 

@@ -38,8 +38,8 @@ public class MainView extends javax.swing.JFrame {
 
         jDesktopPane1 = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        jMenu1 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -57,14 +57,6 @@ public class MainView extends javax.swing.JFrame {
             .addGap(0, 502, Short.MAX_VALUE)
         );
 
-        jMenu1.setText("Транспорт");
-        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenu1MouseClicked(evt);
-            }
-        });
-        jMenuBar1.add(jMenu1);
-
         jMenu2.setText("Маршрути");
         jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -72,6 +64,14 @@ public class MainView extends javax.swing.JFrame {
             }
         });
         jMenuBar1.add(jMenu2);
+
+        jMenu1.setText("Транспорт");
+        jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu1MouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(jMenu1);
 
         jMenu3.setText("Кур'єри");
         jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
