@@ -121,8 +121,8 @@ public class CarsView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (jTable1.isColumnSelected(0) || jTable1.isColumnSelected(1) || 
-                jTable1.isColumnSelected(2) || jTable1.isColumnSelected(3) || 
+        if (jTable1.isColumnSelected(0) || jTable1.isColumnSelected(1) ||
+                jTable1.isColumnSelected(2) || jTable1.isColumnSelected(3) ||
                 jTable1.isColumnSelected(4) || jTable1.isColumnSelected(5))  {
             int ID = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
             carsController.deleteCar(ID);
@@ -135,6 +135,8 @@ public class CarsView extends javax.swing.JInternalFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         carsController.updateTableCars(jTable1);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

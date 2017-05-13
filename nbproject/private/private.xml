@@ -5,7 +5,12 @@
         <group>
             <file>file:/C:/Users/Andrey/Documents/NetBeansProjects/Course'ach/src/model/Tools.java</file>
             <file>file:/C:/Users/Andrey/Documents/NetBeansProjects/Course'ach/src/view/AddCourierView.java</file>
+            <file>file:/C:/Users/Andrey/Documents/NetBeansProjects/Course'ach/src/view/AddCarView.java</file>
+            <file>file:/C:/Users/Andrey/Documents/NetBeansProjects/Course'ach/src/controller/CarsController.java</file>
             <file>file:/C:/Users/Andrey/Documents/NetBeansProjects/Course'ach/src/controller/CourierController.java</file>
+            <file>file:/C:/Users/Andrey/Documents/NetBeansProjects/Course'ach/src/model/DataBaseConnection.java</file>
+            <file>file:/C:/Users/Andrey/Documents/NetBeansProjects/Course'ach/src/view/CarsView.java</file>
+            <file>file:/C:/Users/Andrey/Documents/NetBeansProjects/Course'ach/src/view/CouriersView.java</file>
         </group>
     </open-files>
 </project-private>

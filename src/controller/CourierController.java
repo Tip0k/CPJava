@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -13,10 +14,13 @@ import model.CourierStatus;
 
 public class CourierController {
 
+    //private ArrayList<> AR;
+
     private Connection connection;
 
     public CourierController() {
         connection = DataBaseConnection.getConnection();
+        //AR = cont.getAR();
     }
 
     public String[] getFreeCarsID(String partOfID) {
