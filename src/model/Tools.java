@@ -19,7 +19,7 @@ public class Tools {
         return new File(".").getAbsolutePath().substring(0, new File(".").getAbsolutePath().length() - 2);
     }
 
-    public static int convertAndPowToX(String string, int pow) throws IllegalArgumentException {//кіло-дабл в інт
+    public static int convertAndPowToX(String string, int pow) throws IllegalArgumentException {
         try {
             int intPart;
             String floatPart = "";
@@ -28,8 +28,8 @@ public class Tools {
             if (!string.contains(".")) {
                 intPart = Integer.parseInt(string);
                 for (int i = 0; i < pow; i++) {
-                        floatPart += "0";
-                    }
+                    floatPart += "0";
+                }
             } else {
                 intPart = Integer.parseInt(string.substring(0, string.indexOf(".")));
                 floatPart = string.substring(string.indexOf(".") + 1, string.length());
@@ -46,7 +46,7 @@ public class Tools {
                 throw new IllegalArgumentException();
             }
             int result = Integer.parseInt(intPart + "" + floatPart);
-            if(result > 0) {
+            if (result > 0) {
                 return result;
             } else {
                 throw new IllegalArgumentException();
@@ -73,5 +73,59 @@ public class Tools {
         System.out.println(convertAndPowFromX(convertAndPowToX("4,12345", 3), 3));
         System.out.println(convertAndPowToX("4,01", 2));
         System.out.println(convertAndPowFromX(convertAndPowToX("4,01", 2), 2));
+
+        DaoFactory df = new MySqlDaoFactory();
+        TransportDao td = df.getTransportDao();
+        for(int i = 0 ; i < 100; i++) {
+            Transport c = new Transport();
+            c.setName("df");
+            c.setMaxHcm(1);
+            c.setMaxLcm(11);
+            c.setMaxWcm(111);
+            c.setMaxWg(1111);
+            c.setType("Вело");
+            td.insertTransport(c);
+        }
+        for (Transport t : td.selectTransportTO()) {
+            System.out.println(t.getId());
+        }
+
     }
+
+    /*public int insertCustomer(...) {
+    // Реализовать здесь операцию добавления клиента.
+    // Возвратить номер созданного клиента
+    // или -1 при ошибке
+  }
+  
+  public boolean deleteCustomer(...) {
+    // Реализовать здесь операцию удаления клиента.
+    // Возвратить true при успешном выполнении, false при ошибке
+  }
+
+  public Customer findCustomer(...) {
+    // Реализовать здесь операцию поиска клиента, используя
+    // предоставленные значения аргументов в качестве критерия поиска.
+    // Возвратить объект Transfer Object при успешном поиске,
+    // null или ошибку, если клиент не найден.
+  }
+
+  public boolean updateCustomer(...) {
+    // Реализовать здесь операцию обновления записи,
+    // используя данные из customerData Transfer Object
+    // Возвратить true при успешном выполнении, false при ошибке
+  }
+
+  public RowSet selectCustomersRS(...) {
+    // Реализовать здесь операцию выбора клиентов,
+    // используя предоставленный критерий.
+    // Возвратить RowSet.
+  }
+
+  public Collection selectCustomersTO(...) {
+    // Реализовать здесь операцию выбора клиентов,
+    // используя предоставленный критерий.
+    // В качестве альтернативы, реализовать возврат
+    // коллекции объектов Transfer Object.
+  }*/
 }
