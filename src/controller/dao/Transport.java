@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package controller.dao;
+
+import model.TransportType;
 
 /**
  *
@@ -13,7 +15,7 @@ public class Transport implements java.io.Serializable {
 
     private int Id;
     private String name;
-    private String type;
+    private TransportType type;
     private int maxWg;
     private int maxWcm;
     private int maxHcm;
@@ -27,7 +29,7 @@ public class Transport implements java.io.Serializable {
         return name;
     }
 
-    public String getType() {
+    public TransportType getType() {
         return type;
     }
 
@@ -67,7 +69,7 @@ public class Transport implements java.io.Serializable {
         this.maxWg = maxWg;
     }
 
-    public void setType(String type) {
+    public void setType(TransportType type) {
         this.type = type;
     }
 

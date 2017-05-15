@@ -5,6 +5,10 @@
  */
 package model;
 
+import controller.dao.TransportDao;
+import controller.dao.Transport;
+import controller.dao.MySqlDaoFactory;
+import controller.dao.DaoFactory;
 import java.io.File;
 
 /**
@@ -83,7 +87,9 @@ public class Tools {
             c.setMaxLcm(11);
             c.setMaxWcm(111);
             c.setMaxWg(1111);
-            c.setType("Вело");
+            TransportType tt = new TransportType();
+            tt.setName("Вело");
+            c.setType(tt);
             td.insertTransport(c);
         }
         for (Transport t : td.selectTransportTO()) {
@@ -97,7 +103,7 @@ public class Tools {
     // Возвратить номер созданного клиента
     // или -1 при ошибке
   }
-  
+
   public boolean deleteCustomer(...) {
     // Реализовать здесь операцию удаления клиента.
     // Возвратить true при успешном выполнении, false при ошибке

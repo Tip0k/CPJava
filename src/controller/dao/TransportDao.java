@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package controller.dao;
 
 import java.util.List;
+import model.TransportType;
 
 /**
  *
@@ -17,7 +18,11 @@ public interface TransportDao {
 
     public boolean deleteTransport(Transport transport);
 
+    public TransportType findTransportType(String name);
+
+    public List<TransportType> selectTransportTypes();
+
+    public Transport findTransport(int Id);
+
     public List<Transport> selectTransportTO();
-    
-    public List<TransportType> getTransportTypes();
 }

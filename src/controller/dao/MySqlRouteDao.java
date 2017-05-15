@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package controller.dao;
 
 import java.util.List;
 import java.sql.PreparedStatement;
@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import model.Route;
 
 /**
  *
@@ -24,8 +25,8 @@ public class MySqlRouteDao implements RouteDao {
             PreparedStatement preparedStatement;
             preparedStatement = MySqlDaoFactory.getConnection().prepareStatement(
                     "insert into route values(null, ?, ?, ?)");
-            preparedStatement.setString(1, route.getStartPoint().toString());
-            preparedStatement.setString(2, route.getEndPoint().toString());
+            preparedStatement.setString(1, route.getStartPoint());
+            preparedStatement.setString(2, route.getEndPoint());
             preparedStatement.setInt(3, route.getDistanceM());
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -46,13 +47,35 @@ public class MySqlRouteDao implements RouteDao {
     }
 
     @Override
+    public Route findRoute(int Id) {
+        Route result = new Route();
+        try {
+            Statement statement = MySqlDaoFactory.getConnection().createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from route where routeId = " + Id);
+
+            if (resultSet.next()) {
+                result.setId(resultSet.getInt("routeId"));
+                result.setStartPoint(resultSet.getString("routeStartPoint"));
+                result.setEndPoint(resultSet.getString("routeEndPoint"));
+                result.setDistanceM(resultSet.getInt("routeDistanceM"));
+            }
+            if (resultSet.next()) {
+                throw new SQLException();
+            }
+        } catch (SQLException ex) {
+            return null;
+        }
+        return result;
+    }
+
+    @Override
     public List<Route> selectRoutesTO() {
         ArrayList<Route> result = new ArrayList<>();
         try {
             Statement statement = MySqlDaoFactory.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("select * from route order by routeId desc");
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Route route = new Route();
                 route.setId(resultSet.getInt("routeId"));
                 route.setStartPoint(resultSet.getString("routeStartPoint"));

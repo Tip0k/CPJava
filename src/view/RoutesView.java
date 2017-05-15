@@ -1,13 +1,20 @@
 package view;
 
 import controller.RoutesController;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import model.Route;
+import model.Tools;
 
 public class RoutesView extends javax.swing.JInternalFrame {
 
     private static RoutesView routesView;
-    private RoutesController routesController;
+    private final RoutesController routesController;
 
     private RoutesView() {
         routesController = new RoutesController();
@@ -18,7 +25,7 @@ public class RoutesView extends javax.swing.JInternalFrame {
         setClosable(true);
         frameIcon = new ImageIcon(this.getClass().getClassLoader().getResource("resources/images/iconBlack.png"));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        routesController.updateTableRoutes(jTable1);
+        updateTableRoutes();
     }
 
     public static RoutesView getRoutesView() {
@@ -27,6 +34,103 @@ public class RoutesView extends javax.swing.JInternalFrame {
         }
         routesView = new RoutesView();
         return routesView;
+    }
+
+    public void updateTableRoutes() {
+        try {
+            jTable1.setModel(new RoutesTableModel());
+            jTable1.getColumnModel().getColumn(0).setMinWidth(50);
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(50);
+            jTable1.getColumnModel().getColumn(2).setMinWidth(150);
+            jTable1.getColumnModel().getColumn(2).setMaxWidth(300);
+            jTable1.getColumnModel().getColumn(3).setMinWidth(150);
+            jTable1.getColumnModel().getColumn(3).setMaxWidth(300);
+            jTable1.getColumnModel().getColumn(4).setMaxWidth(150);
+            jTable1.updateUI();
+        } catch (Exception ex) {
+            MainView.showErrorPane("Сталась помилка при оновлені таблиці.", ex);
+        }
+    }
+
+    public class RoutesTableModel extends AbstractTableModel {
+
+        private ArrayList<Route> routes;
+
+        public RoutesTableModel() {
+            super();
+            routes = routesController.getRoutes();
+        }
+
+        @Override
+        public int getRowCount() {
+            return routes.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 5;
+        }
+
+        @Override
+        public String getColumnName(int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return "№";
+                case 1:
+                    return "ID";
+                case 2:
+                    return "Пункт відправлення";
+                case 3:
+                    return "Пункт прибуття";
+                case 4:
+                    return "Відстань (км)";
+                default:
+                    return "Error";
+            }
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            return String.class;
+        }
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return false;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return rowIndex + 1;
+                case 1:
+                    return routes.get(rowIndex).getId();
+                case 2:
+                    return routes.get(rowIndex).getStartPoint();
+                case 3:
+                    return routes.get(rowIndex).getEndPoint();
+                case 4:
+                    return Tools.convertAndPowFromX(routes.get(rowIndex).getDistanceM(), 3);
+                default:
+                    return "Error";
+            }
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void addTableModelListener(TableModelListener l) {
+            listenerList.add(TableModelListener.class, l);
+        }
+
+        @Override
+        public void removeTableModelListener(TableModelListener l) {
+            listenerList.remove(TableModelListener.class, l);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -120,8 +224,8 @@ public class RoutesView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        if (jTable1.isColumnSelected(0) || jTable1.isColumnSelected(1) || 
-                jTable1.isColumnSelected(2) || jTable1.isColumnSelected(3)) {
+        if (jTable1.isColumnSelected(0) || jTable1.isColumnSelected(1)
+                || jTable1.isColumnSelected(2) || jTable1.isColumnSelected(3)) {
             int ID = Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString());
             routesController.deleteRoute(ID);
             routesController.updateTableRoutes(jTable1);
@@ -131,7 +235,7 @@ public class RoutesView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        routesController.updateTableRoutes(jTable1);
+        updateTableRoutes();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
