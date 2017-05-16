@@ -11,22 +11,50 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
+import model.Courier;
+import model.Transport;
 
 /**
  *
  * @author PEOPLE
  */
-public class AddCourierView extends javax.swing.JInternalFrame implements Runnable {
+public class AddCourierView extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form AddRoute
      */
     private static AddCourierView addCourierView;
-    private CourierController courierController;
+    private final CourierController courierController;
+    private final ArrayList<Transport> freeTransport;
 
     private AddCourierView(CourierController courierController) {
         initComponents();
         this.courierController = courierController;
+        freeTransport = courierController.getFreeTransport();
+        setClosable(true);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setIconifiable(true);
+        setVisible(true);
+
+        jComboBox1.setEnabled(false);
+        jRadioButton1.setSelected(false);
+        jComboBox1.removeAllItems();
+        jComboBox2.removeAllItems();
+
+        jRadioButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jRadioButton1.isSelected()) {
+                    jComboBox1.setEnabled(true);
+                    jComboBox2.setEnabled(false);
+                } else {
+                    jComboBox1.setEnabled(false);
+                    jComboBox2.setEnabled(true);
+                }
+            }
+        });
+
         jComboBox1.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -36,7 +64,18 @@ public class AddCourierView extends javax.swing.JInternalFrame implements Runnab
                 if (e.getStateChange() != ItemEvent.SELECTED) {
                     return;
                 }
-                jComboBox2.setSelectedItem(courierController.getItemForID(e.getItem().toString()));
+
+                boolean flag = true;
+                for (Transport item : freeTransport) {
+                    if (e.getItem().equals(new Integer(item.getId()).toString())) {
+                        jComboBox2.setSelectedItem(freeTransport.get(jComboBox1.getSelectedIndex()).getName());
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    jComboBox2.setSelectedItem("Error");
+                }
             }
         }
         );
@@ -50,38 +89,26 @@ public class AddCourierView extends javax.swing.JInternalFrame implements Runnab
                 if (e.getStateChange() != ItemEvent.SELECTED) {
                     return;
                 }
-                jComboBox1.setSelectedItem(courierController.getItemForName(e.getItem().toString()));
+
+                boolean flag = true;
+                for (Transport item : freeTransport) {
+                    if (e.getItem().equals(item.getName())) {
+                        jComboBox1.setSelectedItem(freeTransport.get(jComboBox2.getSelectedIndex()).getId());
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    jComboBox1.setSelectedItem("Error");
+                }
             }
         }
         );
-        setClosable(true);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setIconifiable(true);
 
-        jComboBox1.removeAllItems();
-        jComboBox2.removeAllItems();
-
-        for (String car : courierController.getFreeCarsID("")) {
-            jComboBox1.addItem(car);
+        for (int i = 0; i < freeTransport.size(); i++) {
+            jComboBox1.addItem(new Integer(freeTransport.get(i).getId()).toString());
+            jComboBox2.addItem(freeTransport.get(i).getName());
         }
-        for (String car : courierController.getFreeCarsName("")) {
-            jComboBox2.addItem(car);
-        }
-
-        jComboBox1.setEnabled(false);
-        jRadioButton1.setSelected(false);
-        jRadioButton1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (jRadioButton1.isSelected()) {
-                    jComboBox1.setEnabled(true);
-                    jComboBox2.setEnabled(false);
-                } else {
-                    jComboBox1.setEnabled(false);
-                    jComboBox2.setEnabled(true);
-                }
-            }
-        });
     }
 
     public static AddCourierView getAddCourierView(CourierController courierController) {
@@ -194,10 +221,11 @@ public class AddCourierView extends javax.swing.JInternalFrame implements Runnab
                 .addGap(12, 12, 12)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -211,41 +239,55 @@ public class AddCourierView extends javax.swing.JInternalFrame implements Runnab
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        boolean error = false;
-        try {
-            String PIP;
-            String phone;
-            int carID = -1;
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                boolean error = false;
+                try {
+                    String PIP;
+                    String phone;
+                    Transport transport = null;
 
-            jTextField2.setBackground(Color.white);
-            jTextField3.setBackground(Color.white);
+                    jTextField2.setBackground(Color.white);
+                    jTextField3.setBackground(Color.white);
 
-            try {
-                carID = Integer.parseInt(jComboBox1.getSelectedItem().toString());
-            } catch (Exception ex) {
-                error = true;
+                    try {
+                        for(Transport t : freeTransport) {
+                            if(t.getId() == Integer.parseInt(jComboBox1.getSelectedItem().toString())) {
+                                transport = t;
+                                break;
+                            }
+                        }
+                        if(transport == null) {
+                            throw new Exception();
+                        }
+                    } catch (Exception ex) {
+                        error = true;
+                    }
+
+                    PIP = jTextField2.getText();
+                    phone = jTextField3.getText();
+
+                    if (PIP.length() < 3) {
+                        jTextField2.setBackground(Color.red);
+                        error = true;
+                    }
+                    if (phone.length() < 5) {
+                        jTextField3.setBackground(Color.red);
+                        error = true;
+                    }
+                    if (error) {
+                        throw new Exception();
+                    }
+                    Courier c = new Courier();
+                    c.setName(PIP);
+                    c.setPhone(phone);
+                    c.setTransport(transport);
+                    courierController.addCourier(c);
+                    addCourierView.dispose();
+                } catch (Exception ex) {
+                }
             }
-
-            PIP = jTextField2.getText();
-            phone = jTextField3.getText();
-
-            if (PIP.length() < 3) {
-                jTextField2.setBackground(Color.red);
-                error = true;
-            }
-            if (phone.length() < 5) {
-                jTextField3.setBackground(Color.red);
-                error = true;
-            }
-            if (error) {
-                throw new Exception();
-            }
-
-            courierController.addCourier(PIP, phone, carID);
-
-            this.dispose();
-        } catch (Exception ex) {
-        }
+        });
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -262,9 +304,4 @@ public class AddCourierView extends javax.swing.JInternalFrame implements Runnab
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void run() {
-        setVisible(true);
-    }
 }

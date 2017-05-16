@@ -5,6 +5,7 @@
  */
 package controller.dao;
 
+import model.Transport;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -79,10 +80,15 @@ public class MySqlTransportDao implements TransportDao {
         TransportType result = new TransportType();
         try {
             Statement statement = MySqlDaoFactory.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from transportType where transportTypeName = " + name);
-
-            result.setName(resultSet.getString("transportTypeName"));
-            result.setKmPerH(resultSet.getInt("transportTypeKmPerH"));
+            ResultSet resultSet = statement.executeQuery("select * from transportType where transportTypeName = \'" + name + "\'");
+            
+            if (resultSet.next()) {
+                result.setName(resultSet.getString("transportTypeName"));
+                result.setKmPerH(resultSet.getInt("transportTypeKmPerH"));
+            }
+            if (resultSet.next()) {
+                throw new SQLException();
+            }
         } catch (SQLException ex) {
             return null;
         }

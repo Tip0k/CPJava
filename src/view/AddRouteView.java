@@ -6,24 +6,24 @@
 package view;
 
 import java.awt.Color;
-import model.Locality;
 import model.Regions;
-import controller.RoutesController;
+import controller.RouteController;
+import model.Route;
 import model.Tools;
 
 /**
  *
  * @author PEOPLE
  */
-public class AddRouteView extends javax.swing.JInternalFrame implements Runnable {
+public class AddRouteView extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form AddRoute
      */
     private static AddRouteView addRouteView;
-    private RoutesController routesController;
+    private RouteController routesController;
 
-    private AddRouteView(RoutesController routesController) {
+    private AddRouteView(RouteController routesController) {
         initComponents();
         this.routesController = routesController;
         setClosable(true);
@@ -35,9 +35,10 @@ public class AddRouteView extends javax.swing.JInternalFrame implements Runnable
             jComboBox1.addItem(region);
             jComboBox2.addItem(region);
         }
+        show();
     }
 
-    public static AddRouteView getAddRouteView(RoutesController routesController) {
+    public static AddRouteView getAddRouteView(RouteController routesController) {
         if (addRouteView != null) {
             addRouteView.dispose();
         }
@@ -184,39 +185,44 @@ public class AddRouteView extends javax.swing.JInternalFrame implements Runnable
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int distance = 0;
-        boolean error = false;
-        try {
-            try {
-                jTextField5.setBackground(Color.white);
-                distance = Tools.convertAndPowToX(jTextField5.getText(), 3);
-            } catch (Exception ex) {
-                jTextField5.setBackground(Color.red);
-                error = true;
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                int distance = 0;
+                boolean error = false;
+                try {
+                    try {
+                        jTextField5.setBackground(Color.white);
+                        distance = Tools.convertAndPowToX(jTextField5.getText(), 3);
+                    } catch (Exception ex) {
+                        jTextField5.setBackground(Color.red);
+                        error = true;
+                    }
+                    String a = jTextField2.getText();
+                    String b = jTextField4.getText();
+                    jTextField2.setBackground(Color.white);
+                    jTextField4.setBackground(Color.white);
+                    if (a.length() < 3) {
+                        jTextField2.setBackground(Color.red);
+                        error = true;
+                    }
+                    if (b.length() < 3) {
+                        jTextField4.setBackground(Color.red);
+                        error = true;
+                    }
+                    if (error) {
+                        throw new Exception();
+                    }
+                    Route route = new Route();
+                    route.setStartPoint(jComboBox1.getSelectedItem().toString() + ", " + a);
+                    route.setEndPoint(jComboBox2.getSelectedItem().toString() + ", " + b);
+                    route.setDistanceM(distance);
+                    routesController.addRoute(route);
+                    addRouteView.dispose();
+                } catch (Exception ex) {
+                }
             }
-            String a = jTextField2.getText();
-            String b = jTextField4.getText();
-            jTextField2.setBackground(Color.white);
-            jTextField4.setBackground(Color.white);
-            if (a.length() < 3) {
-                jTextField2.setBackground(Color.red);
-                error = true;
-            }
-            if (b.length() < 3) {
-                jTextField4.setBackground(Color.red);
-                error = true;
-            }
-            if (error) {
-                throw new Exception();
-            }
-            routesController.addRoute(new Locality(jComboBox1.getSelectedItem().toString(), a),
-                    new Locality(jComboBox2.getSelectedItem().toString(), b), distance);
-            this.dispose();
-        } catch (Exception ex) {
-
-        }
+        });
     }//GEN-LAST:event_jButton1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -233,9 +239,4 @@ public class AddRouteView extends javax.swing.JInternalFrame implements Runnable
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void run() {
-        setVisible(true);
-    }
 }

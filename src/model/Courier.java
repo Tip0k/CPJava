@@ -5,8 +5,6 @@
  */
 package model;
 
-import controller.dao.Transport;
-
 /**
  *
  * @author PEOPLE

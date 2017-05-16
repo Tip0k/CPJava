@@ -10,16 +10,15 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import model.*;
-import controller.RoutesController;
+import controller.RouteController;
 import javax.swing.JFrame;
 
 public class MainView extends javax.swing.JFrame {
 
     private static MainView mainView;
-    private RoutesView routesView;
-    private CarsView carsView;
-    private CouriersView couriersView;
-
+    private RouteView routesView;
+    private TransportView carsView;
+    private CourierView couriersView;
 
     public MainView() {
         initComponents();
@@ -106,21 +105,21 @@ public class MainView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-        routesView = RoutesView.getRoutesView();
+        routesView = RouteView.getRouteView();
         jDesktopPane1.add(routesView);
         routesView.setLocation(jDesktopPane1.getLocation().x + 10, jDesktopPane1.getLocation().y + 10);
         routesView.toFront();
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
-        carsView = CarsView.getCarsView();
+        carsView = TransportView.getTransportView();
         jDesktopPane1.add(carsView);
         carsView.setLocation(jDesktopPane1.getLocation().x + 30, jDesktopPane1.getLocation().y + 10);
         carsView.toFront();
     }//GEN-LAST:event_jMenu1MouseClicked
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
-        couriersView = CouriersView.getCouriersView();
+        couriersView = CourierView.getCourierView();
         jDesktopPane1.add(couriersView);
         couriersView.setLocation(jDesktopPane1.getLocation().x + 50, jDesktopPane1.getLocation().y + 10);
         couriersView.toFront();

@@ -5,6 +5,7 @@
  */
 package controller.dao;
 
+import model.Transport;
 import java.util.List;
 import model.Courier;
 

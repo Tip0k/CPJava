@@ -27,7 +27,7 @@ public class MySqlDaoFactory implements DaoFactory {//fabric method
 
     @Override
     public CourierDao getCourierDao() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new MySqlCourierDao();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MySqlDaoFactory implements DaoFactory {//fabric method
                 Class.forName("com.mysql.jdbc.Driver");
                 connection = DriverManager.getConnection(url, name, password);
             } catch (SQLException ex) {
-                throw new DaoException(ex);
+                throw ex;
             }
         }
 

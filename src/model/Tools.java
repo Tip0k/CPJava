@@ -6,7 +6,6 @@
 package model;
 
 import controller.dao.TransportDao;
-import controller.dao.Transport;
 import controller.dao.MySqlDaoFactory;
 import controller.dao.DaoFactory;
 import java.io.File;
