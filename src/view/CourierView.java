@@ -8,6 +8,8 @@ import javax.swing.JComboBox;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 import model.Courier;
 import model.CourierStatus;
 
@@ -26,7 +28,6 @@ public class CourierView extends javax.swing.JInternalFrame {
         frameIcon = new ImageIcon(this.getClass().getClassLoader().getResource("resources/images/iconBlack.png"));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         updateTableCouriers();
-        setColumnEditor();
     }
 
     public static CourierView getCourierView() {
@@ -44,12 +45,13 @@ public class CourierView extends javax.swing.JInternalFrame {
             jTable1.getColumnModel().getColumn(0).setMinWidth(50);
             jTable1.getColumnModel().getColumn(1).setMaxWidth(50);
             jTable1.getColumnModel().getColumn(1).setMinWidth(50);
-            jTable1.getColumnModel().getColumn(2).setMinWidth(120);
-            jTable1.getColumnModel().getColumn(3).setMinWidth(80);
+            jTable1.getColumnModel().getColumn(2).setMinWidth(140);
             jTable1.getColumnModel().getColumn(3).setMinWidth(100);
-            jTable1.getColumnModel().getColumn(4).setMaxWidth(120);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(100);
+            jTable1.getColumnModel().getColumn(4).setMaxWidth(140);
             jTable1.getColumnModel().getColumn(5).setMinWidth(100);
             jTable1.getColumnModel().getColumn(5).setMaxWidth(100);
+            setColumnEditor();
             jTable1.updateUI();
 
         } catch (Exception ex) {
@@ -60,9 +62,15 @@ public class CourierView extends javax.swing.JInternalFrame {
     public void setColumnEditor() {
         JComboBox<String> status;
         status = new JComboBox<>();
-        status.addItem(CourierStatus.UNKNOWN);
-        status.addItem(CourierStatus.FREE);
-        jTable1.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(status));
+        for (String s : CourierStatus.getAllStatuses()) {
+            status.addItem(s);
+        }
+
+        TableColumn tc = jTable1.getColumnModel().getColumn(5);
+        tc.setCellEditor(new DefaultCellEditor(status));
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setToolTipText("Натисніть щоб змінити статус");
+        tc.setCellRenderer(renderer);
     }
 
     public class CourierTableModel extends AbstractTableModel {
@@ -115,7 +123,11 @@ public class CourierView extends javax.swing.JInternalFrame {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return false;
+            if (columnIndex == 5) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         @Override
@@ -131,10 +143,8 @@ public class CourierView extends javax.swing.JInternalFrame {
                     return couriers.get(rowIndex).getPhone();
                 case 4:
                     return couriers.get(rowIndex).getTransport().getName();
-                //case 5:
-                    //status.setSelectedItem(couriers.get(rowIndex).getStatus());
-                    //return status;
-                    //return null;
+                case 5:
+                    return couriers.get(rowIndex).getStatus();
                 default:
                     return "Error";
             }
@@ -142,7 +152,18 @@ public class CourierView extends javax.swing.JInternalFrame {
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            if (columnIndex != 5) {
+                return;
+            }
+            Courier c = couriers.get(rowIndex);
+            c.setStatus(aValue.toString());
+            if (courierController.updateCourier(c)) {
+                couriers.set(rowIndex, c);
+            } else {
+                MainView.showErrorPane("Неможливо змінити статус кур'єра.",
+                        new IllegalArgumentException("Змініть статус замовлення."));
+                updateTableCouriers();
+            }
         }
 
         @Override
@@ -221,9 +242,7 @@ public class CourierView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 308, Short.MAX_VALUE)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 594, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

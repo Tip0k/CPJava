@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import model.Courier;
+import model.Order;
 
 /**
  *
@@ -21,9 +22,11 @@ import model.Courier;
 public class MySqlCourierDao implements CourierDao {
 
     private final MySqlTransportDao mySqlTransportDao;
+    private final RouteDao routeDao;
 
     public MySqlCourierDao() {
         this.mySqlTransportDao = new MySqlTransportDao();
+        this.routeDao = new MySqlRouteDao();
     }
 
     @Override
@@ -62,16 +65,7 @@ public class MySqlCourierDao implements CourierDao {
                     "update courier set courierName = ?, courierPhone = ?, transportId = ?, courierStatus = ? where courierId = ?");
             preparedStatement.setString(1, courier.getName());
             preparedStatement.setString(2, courier.getPhone());
-            int tempId = -1;
-            for (Transport t : selectFreeTransport()) {
-                if (t.getId() == courier.getTransport().getId()) {
-                    tempId = t.getId();
-                }
-            }
-            if (tempId < 0) {
-                throw new SQLException();
-            }
-            preparedStatement.setInt(3, tempId);
+            preparedStatement.setInt(3, courier.getTransport().getId());
             preparedStatement.setString(4, courier.getStatus());
             preparedStatement.setInt(5, courier.getId());
             preparedStatement.executeUpdate();
@@ -81,6 +75,34 @@ public class MySqlCourierDao implements CourierDao {
         return true;
     }
 
+    public List<Order> selectCourierOrders(Courier courier) {
+        ArrayList<Order> result = new ArrayList<>();
+        try {
+            Statement statement = MySqlDaoFactory.getConnection().createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from `order` where courierId = " + courier.getId());
+
+            while (resultSet.next()) {
+                Order order = new Order();
+                order.setId(resultSet.getInt("orderId"));
+                order.setStartPointAdress(resultSet.getString("orderStartPointAdress"));
+                order.setEndPointAdress(resultSet.getString("orderEndPointAdress"));
+                order.setRoute(routeDao.findRoute(resultSet.getInt("routeId")));
+                order.setClientName(resultSet.getString("orderClientName"));
+                order.setClientPhone(resultSet.getString("orderClientPhone"));
+                order.setCourier(findCourier(resultSet.getInt("courierId")));
+                order.setCostUahC(resultSet.getInt("orderCostUahC"));
+                order.setOrderDate(resultSet.getString("orderOrderDate"));
+                order.setDoneDate(resultSet.getString("orderDoneDate"));
+                order.setDelayMin(resultSet.getInt("orderDelayMin"));
+                order.setStatus(resultSet.getString("orderStatus"));
+                result.add(order);
+            }
+        } catch (SQLException ex) {
+            return null;
+        }
+        return result;
+    }
+    
     @Override
     public Courier findCourier(int Id) {
         Courier result = new Courier();
@@ -106,7 +128,6 @@ public class MySqlCourierDao implements CourierDao {
 
     @Override
     public List<Courier> selectCourierTO() {
-
         ArrayList<Courier> result = new ArrayList<>();
         try {
             Statement statement = MySqlDaoFactory.getConnection().createStatement();

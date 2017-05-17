@@ -85,6 +85,7 @@ public class MySqlTransportDao implements TransportDao {
             if (resultSet.next()) {
                 result.setName(resultSet.getString("transportTypeName"));
                 result.setKmPerH(resultSet.getInt("transportTypeKmPerH"));
+                result.setMaxDistanceM(resultSet.getInt("transportTypeMaxDistanceM"));
             }
             if (resultSet.next()) {
                 throw new SQLException();
@@ -130,6 +131,7 @@ public class MySqlTransportDao implements TransportDao {
                 TransportType type = new TransportType();
                 type.setName(resultSet.getString("transportTypeName"));
                 type.setKmPerH(resultSet.getInt("transportTypeKmPerH"));
+                type.setMaxDistanceM(resultSet.getInt("transportTypeMaxDistanceM"));
                 result.add(type);
             }
         } catch (SQLException ex) {

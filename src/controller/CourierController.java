@@ -5,6 +5,8 @@ import controller.dao.MySqlDaoFactory;
 import java.util.ArrayList;
 import model.Courier;
 import model.CourierStatus;
+import model.Order;
+import model.OrderStatus;
 import model.Transport;
 
 public class CourierController {
@@ -23,108 +25,28 @@ public class CourierController {
         return new ArrayList(courierDao.selectFreeTransport());
     }
 
-    ////
-//    public String[] getFreeCarsID(String partOfID) {
-//        try {
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery("select cars.carsID from cars\n"
-//                    + "left outer join couriers\n"
-//                    + "on cars.carsID = couriers.carsID\n"
-//                    + "where couriers.carsID is null and cars.carsID like \'%" + partOfID + "%\'\n"
-//                    + "order by cars.carsID desc");
-//
-//            int n = 0;
-//            while (resultSet.next()) {
-//                n++;
-//            }
-//            resultSet.first();
-//            resultSet.previous();
-//            String[] result = new String[n];
-//            n--;
-//            while (resultSet.next()) {
-//                result[n--] = resultSet.getString("carsID");
-//            }
-//            if (result.length > 0) {
-//                return result;
-//            } else {
-//                return new String[]{"none"};
-//            }
-//        } catch (Exception ex) {
-//            return null;
-//        }
-//    }
-//
-//    public String[] getFreeCarsName(String partOfName) {
-//        try {
-//            if (partOfName.contains("#")) {
-//                partOfName = partOfName.substring(0, partOfName.indexOf("#") - 1);
-//            }
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery("select cars.carsName, cars.carsID from cars\n"
-//                    + "left outer join couriers\n"
-//                    + "on cars.carsID = couriers.carsID\n"
-//                    + "where couriers.carsID is null and cars.carsName like \'%" + partOfName + "%\'\n"
-//                    + "order by cars.carsName desc");
-//
-//            int n = 0;
-//            while (resultSet.next()) {
-//                n++;
-//            }
-//            resultSet.first();
-//            resultSet.previous();
-//            String[] result = new String[n];
-//            n--;
-//            while (resultSet.next()) {
-//                result[n--] = resultSet.getString("carsName") + " #" + resultSet.getString("carsID");
-//            }
-//            if (result.length > 0) {
-//                return result;
-//            } else {
-//                return new String[]{"none"};
-//            }
-//        } catch (Exception ex) {
-//            return null;
-//        }
-//    }
-//
-//    public String getItemForID(String ID) {
-//        try {
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery("select cars.carsName from cars\n"
-//                    + "left outer join couriers\n"
-//                    + "on cars.carsID = couriers.carsID\n"
-//                    + "where couriers.carsID is null and cars.carsID = " + ID + "\n");
-//            resultSet.next();
-//            return resultSet.getString("carsName") + " #" + ID;
-//        } catch (Exception ex) {
-//            return null;
-//        }
-//    }
-//
-//    public String getItemForName(String name) {
-//        try {
-//            if (name.contains("#")) {
-//                return name.substring(name.indexOf("#") + 1, name.length());
-//            }
-//
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery("select cars.carsID from cars\n"
-//                    + "left outer join couriers\n"
-//                    + "on cars.carsID = couriers.carsID\n"
-//                    + "where couriers.carsID is null and cars.carsName = " + name + "\n");
-//            resultSet.next();
-//            return resultSet.getString("carsID");
-//        } catch (Exception ex) {
-//            return null;
-//        }
-//    }
-//
+    public boolean updateCourier(Courier courier) {
+        if (courier.getStatus().equals(CourierStatus.REWORK)) {
+            for (Order o : courierDao.selectCourierOrders(courier)) {
+                if (o.getStatus().equals(OrderStatus.IS_PERFORMED)) {
+                    return false;
+                }
+            }
+        } else if (courier.getStatus().equals(CourierStatus.IN_WORK)) {
+            return false;
+        }
+        return courierDao.updateCourier(courier);
+    }
+
     public void addCourier(Courier courier) {
         courier.setStatus(CourierStatus.UNKNOWN);
         courierDao.insertCourier(courier);
     }
 
     public void deleteCourier(int Id) {
+        if (courierDao.findCourier(Id).getStatus().equals(CourierStatus.IN_WORK)) {
+            throw new IllegalArgumentException("Неможливо видалити кур'єра.");
+        }
         courierDao.deleteCourier(courierDao.findCourier(Id));
     }
 }

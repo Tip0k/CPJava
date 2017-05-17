@@ -19,6 +19,8 @@ public class MainView extends javax.swing.JFrame {
     private RouteView routesView;
     private TransportView carsView;
     private CourierView couriersView;
+    private TariffView tariffView;
+    private OrderView orderView;
 
     public MainView() {
         initComponents();
@@ -46,17 +48,20 @@ public class MainView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Робоче місце диспетчера кур'єрської служби доставки");
         setLocationByPlatform(true);
+        getContentPane().setLayout(new javax.swing.OverlayLayout(getContentPane()));
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
         jDesktopPane1Layout.setHorizontalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGap(0, 923, Short.MAX_VALUE)
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 527, Short.MAX_VALUE)
+            .addGap(0, 525, Short.MAX_VALUE)
         );
+
+        getContentPane().add(jDesktopPane1);
 
         jMenu2.setText("Маршрути");
         jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -83,47 +88,111 @@ public class MainView extends javax.swing.JFrame {
         jMenuBar1.add(jMenu3);
 
         jMenu4.setText("Тарифи");
+        jMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu4MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu4);
 
         jMenu5.setText("Замовлення");
+        jMenu5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu5MouseClicked(evt);
+            }
+        });
         jMenuBar1.add(jMenu5);
 
         setJMenuBar(jMenuBar1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1)
-        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenu2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu2MouseClicked
-        routesView = RouteView.getRouteView();
-        jDesktopPane1.add(routesView);
-        routesView.setLocation(jDesktopPane1.getLocation().x + 10, jDesktopPane1.getLocation().y + 10);
-        routesView.toFront();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    routesView = RouteView.getRouteView();
+                    jDesktopPane1.add(routesView);
+                    routesView.setLocation(jDesktopPane1.getLocation().x + 40, jDesktopPane1.getLocation().y + 10);
+                    routesView.toFront();
+                    routesView.setSelected(true);
+                } catch (Exception ex) {
+                    showErrorPane("Сталась помилка при відкритті вікна.", ex);
+                }
+            }
+        });
     }//GEN-LAST:event_jMenu2MouseClicked
 
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
-        carsView = TransportView.getTransportView();
-        jDesktopPane1.add(carsView);
-        carsView.setLocation(jDesktopPane1.getLocation().x + 30, jDesktopPane1.getLocation().y + 10);
-        carsView.toFront();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    carsView = TransportView.getTransportView();
+                    jDesktopPane1.add(carsView);
+                    carsView.setLocation(jDesktopPane1.getLocation().x + 70, jDesktopPane1.getLocation().y + 10);
+                    carsView.toFront();
+                    carsView.setSelected(true);
+                } catch (Exception ex) {
+                    showErrorPane("Сталась помилка при відкритті вікна.", ex);
+                }
+            }
+        });
     }//GEN-LAST:event_jMenu1MouseClicked
 
     private void jMenu3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu3MouseClicked
-        couriersView = CourierView.getCourierView();
-        jDesktopPane1.add(couriersView);
-        couriersView.setLocation(jDesktopPane1.getLocation().x + 50, jDesktopPane1.getLocation().y + 10);
-        couriersView.toFront();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    couriersView = CourierView.getCourierView();
+                    jDesktopPane1.add(couriersView);
+                    couriersView.setLocation(jDesktopPane1.getLocation().x + 100, jDesktopPane1.getLocation().y + 10);
+                    couriersView.toFront();
+                    couriersView.setSelected(true);
+                } catch (Exception ex) {
+                    showErrorPane("Сталась помилка при відкритті вікна.", ex);
+                }
+            }
+        });
     }//GEN-LAST:event_jMenu3MouseClicked
+
+    private void jMenu4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu4MouseClicked
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    tariffView = TariffView.getTariffView();
+                    jDesktopPane1.add(tariffView);
+                    tariffView.setLocation(jDesktopPane1.getLocation().x + 130, jDesktopPane1.getLocation().y + 10);
+                    tariffView.toFront();
+                    tariffView.setSelected(true);
+                } catch (Exception ex) {
+                    System.out.println(ex.getClass());
+                    showErrorPane("Сталась помилка при відкритті вікна.", ex);
+                }
+            }
+        });
+    }//GEN-LAST:event_jMenu4MouseClicked
+
+    private void jMenu5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu5MouseClicked
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    orderView = OrderView.getOrderView();
+                    jDesktopPane1.add(orderView);
+                    orderView.setLocation(jDesktopPane1.getLocation().x + 10, jDesktopPane1.getLocation().y + 10);
+                    orderView.toFront();
+                    orderView.setSelected(true);
+                } catch (Exception ex) {
+                    showErrorPane("Сталась помилка при відкритті вікна.", ex);
+                }
+            }
+        });
+    }//GEN-LAST:event_jMenu5MouseClicked
 
     /**
      * @param args the command line arguments

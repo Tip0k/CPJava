@@ -227,6 +227,10 @@ public class AddTransportView extends javax.swing.JInternalFrame {
 
                     type = transportController.getTransportType(jComboBox1.getSelectedItem().toString());
 
+                    if (type == null) {
+                        error = true;
+                    }
+
                     if (error) {
                         throw new Exception();
                     }

@@ -67,7 +67,62 @@ public class Tools {
         }
     }
 
+    public static String convertFromMinutes(int min) {
+        return min / 60 + "h " + min % 60 + "m";
+    }
+
+    public static String convertDateTimeFromMySql(String mySqlDateTime) {
+        return mySqlDateTime.substring(8, 10)
+                + "." + mySqlDateTime.substring(5, 7)
+                + "." + mySqlDateTime.substring(0, 4) + " "
+                + mySqlDateTime.substring(11, 16);
+    }
+    
+    /**
+     * 
+     * @param date1
+     * @param date2
+     * @return 0 - fail or equals, int result where date1 > date2 on result days
+     */
+    public static int compareDates(String date1, String date2) {
+        try {
+            int result = 0;
+            int sign = 1;
+            
+            int day1 = Integer.parseInt(date1.substring(0, 2));
+            int month1 = Integer.parseInt(date1.substring(3, 5));
+            int year1 = Integer.parseInt(date1.substring(6, 10));
+            
+            int day2 = Integer.parseInt(date1.substring(0, 2));
+            int month2 = Integer.parseInt(date1.substring(3, 5));
+            int year2 = Integer.parseInt(date1.substring(6, 10));
+            
+            if(year1 < year2) {
+                sign = -1;
+            } else if(year1 == year2){
+                if(month1 < month2) {
+                    sign = -1;
+                } else if(month1 == month2) {
+                    if(day1 < day2) {
+                        sign = -1;
+                    } else if(day1 == day2){
+                        return 0;
+                    }
+                }
+            }
+            
+            result = Math.abs(year1 - year2) * 365;
+            result += Math.abs(month1 - month2) * 31;
+            result += Math.abs(day1 - day2);
+            return result * sign;
+        } catch(Exception ex) {
+            return 0;
+        }
+    }
+
     public static void main(String[] args) {
+        System.out.println(convertDateTimeFromMySql("2000-09-05 13:28:00"));
+
         System.out.println(convertAndPowToX("4", 3));
         System.out.println(convertAndPowFromX(convertAndPowToX("4", 3), 3));
         System.out.println(convertAndPowToX("4,5", 3));
@@ -79,7 +134,7 @@ public class Tools {
 
         DaoFactory df = new MySqlDaoFactory();
         TransportDao td = df.getTransportDao();
-        for(int i = 0 ; i < 100; i++) {
+        for (int i = 0; i < 100; i++) {
             Transport c = new Transport();
             c.setName("df");
             c.setMaxHcm(1);

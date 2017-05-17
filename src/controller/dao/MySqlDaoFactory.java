@@ -32,12 +32,12 @@ public class MySqlDaoFactory implements DaoFactory {//fabric method
 
     @Override
     public TariffDao getTariffDao() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new MySqlTariffDao();
     }
 
     @Override
     public OrderDao getOrderDao() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return new MySqlOrderDao();
     }
 
     private static class DataBaseConnection {
