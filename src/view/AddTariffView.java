@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
 import java.awt.Color;
@@ -11,17 +6,10 @@ import model.Tariff;
 import model.Tools;
 import model.TransportType;
 
-/**
- *
- * @author PEOPLE
- */
 public class AddTariffView extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form AddRoute
-     */
     private static AddTariffView addTariff;
-    private TariffController tariffController;
+    private final TariffController tariffController;
 
     private AddTariffView(TariffController tariffController) {
         initComponents();

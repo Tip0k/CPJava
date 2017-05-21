@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
 import java.awt.Color;
@@ -11,17 +6,10 @@ import controller.RouteController;
 import model.Route;
 import model.Tools;
 
-/**
- *
- * @author PEOPLE
- */
 public class AddRouteView extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form AddRoute
-     */
     private static AddRouteView addRouteView;
-    private RouteController routesController;
+    private final RouteController routesController;
 
     private AddRouteView(RouteController routesController) {
         initComponents();

@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
-/**
- *
- * @author PEOPLE
- */
 public class Tariff implements java.io.Serializable {
 
     private int Id;
@@ -37,7 +28,7 @@ public class Tariff implements java.io.Serializable {
     public void setUahCPerKm(int uahCPerKm) {
         this.uahCPerKm = uahCPerKm;
     }
-    
+
     public void setUahCPerPoint(int uahCPerPoint) {
         this.uahCPerPoint = uahCPerPoint;
     }
@@ -61,8 +52,17 @@ public class Tariff implements java.io.Serializable {
     public int getUahCAdditionalCosts() {
         return uahCAdditionalCosts;
     }
-    
+
     public int getUahCPerPoint() {
         return uahCPerPoint;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + ": " + getName() + ", " + getTransportType().getName()
+                + ", {" + Tools.convertAndPowFromX(getUahCPerKm(), 2)
+                + "/" + Tools.convertAndPowFromX(getUahCPerPoint(), 2)
+                + "/" + Tools.convertAndPowFromX(getUahCAdditionalCosts(), 2)
+                + "}uah";
     }
 }

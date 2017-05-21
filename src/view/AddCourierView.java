@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
 import java.awt.Color;
@@ -15,15 +10,8 @@ import java.util.ArrayList;
 import model.Courier;
 import model.Transport;
 
-/**
- *
- * @author PEOPLE
- */
 public class AddCourierView extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form AddRoute
-     */
     private static AddCourierView addCourierView;
     private final CourierController courierController;
     private final ArrayList<Transport> freeTransport;
@@ -251,13 +239,13 @@ public class AddCourierView extends javax.swing.JInternalFrame {
                     jTextField3.setBackground(Color.white);
 
                     try {
-                        for(Transport t : freeTransport) {
-                            if(t.getId() == Integer.parseInt(jComboBox1.getSelectedItem().toString())) {
+                        for (Transport t : freeTransport) {
+                            if (t.getId() == Integer.parseInt(jComboBox1.getSelectedItem().toString())) {
                                 transport = t;
                                 break;
                             }
                         }
-                        if(transport == null) {
+                        if (transport == null) {
                             throw new Exception();
                         }
                     } catch (Exception ex) {

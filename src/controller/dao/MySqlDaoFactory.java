@@ -6,11 +6,7 @@ import java.sql.SQLException;
 
 public class MySqlDaoFactory implements DaoFactory {//fabric method
 
-    //public static final String DRIVER = "com.mysql.jdbc.Driver";
-    //public static final String DBURL = "jdbc:mysql://127.0.0.1/CourierService";
-    //
-    // Использовать DRIVER и DBURL для создания соединения
-    // Рекомендовать реализацию/использование пула соединений
+    // пул з'єднань...
     public static Connection getConnection() {
         return DataBaseConnection.getConnection();
     }

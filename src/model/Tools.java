@@ -1,19 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
-import controller.dao.TransportDao;
-import controller.dao.MySqlDaoFactory;
-import controller.dao.DaoFactory;
 import java.io.File;
+import java.util.Calendar;
 
-/**
- *
- * @author PEOPLE
- */
 public class Tools {
 
     public static final int MAX_INT = 999_999_999;
@@ -77,115 +66,81 @@ public class Tools {
                 + "." + mySqlDateTime.substring(0, 4) + " "
                 + mySqlDateTime.substring(11, 16);
     }
-    
+
+    public static String convertDateTimeToMySql(String dateTime) {
+        if (dateTime.length() < 16) {
+            return " ";
+        }
+        return dateTime.substring(6, 10)
+                + "-" + dateTime.substring(3, 5)
+                + "-" + dateTime.substring(0, 2) + " "
+                + dateTime.substring(11, 16) + ":00";
+    }
+
     /**
-     * 
+     *
      * @param date1
      * @param date2
      * @return 0 - fail or equals, int result where date1 > date2 on result days
      */
-    public static int compareDates(String date1, String date2) {
-        try {
-            int result = 0;
-            int sign = 1;
-            
-            int day1 = Integer.parseInt(date1.substring(0, 2));
-            int month1 = Integer.parseInt(date1.substring(3, 5));
-            int year1 = Integer.parseInt(date1.substring(6, 10));
-            
-            int day2 = Integer.parseInt(date1.substring(0, 2));
-            int month2 = Integer.parseInt(date1.substring(3, 5));
-            int year2 = Integer.parseInt(date1.substring(6, 10));
-            
-            if(year1 < year2) {
-                sign = -1;
-            } else if(year1 == year2){
-                if(month1 < month2) {
-                    sign = -1;
-                } else if(month1 == month2) {
-                    if(day1 < day2) {
-                        sign = -1;
-                    } else if(day1 == day2){
-                        return 0;
-                    }
-                }
-            }
-            
-            result = Math.abs(year1 - year2) * 365;
-            result += Math.abs(month1 - month2) * 31;
-            result += Math.abs(day1 - day2);
-            return result * sign;
-        } catch(Exception ex) {
-            return 0;
+    public static long compareDatesInMinutes(String date1, String date2) {
+        long result = 0;//19.04.2017 17:00:4        
+
+        int day1 = Integer.parseInt(date1.substring(0, 2));
+        int month1 = Integer.parseInt(date1.substring(3, 5));
+        int year1 = Integer.parseInt(date1.substring(6, 10));
+        int hour1 = Integer.parseInt(date1.substring(11, 13));
+        int min1 = Integer.parseInt(date1.substring(14, 16));
+
+        Calendar c = Calendar.getInstance();
+        c.clear();
+        c.set(year1, month1, day1, hour1, min1);
+
+        int day2 = Integer.parseInt(date2.substring(0, 2));
+        int month2 = Integer.parseInt(date2.substring(3, 5));
+        int year2 = Integer.parseInt(date2.substring(6, 10));
+        int hour2 = Integer.parseInt(date2.substring(11, 13));
+        int min2 = Integer.parseInt(date2.substring(14, 16));
+
+        Calendar c1 = Calendar.getInstance();
+        c1.clear();
+        c1.set(year2, month2, day2, hour2, min2);
+
+        int sign = c.compareTo(c1);
+        if (sign < 0) {
+            sign = -1;
+        } else {
+            sign = 1;
         }
+
+        result = ((Math.abs(c.getTimeInMillis() - c1.getTimeInMillis()) / 1000) / 60) * sign;
+        return result;
     }
 
-    public static void main(String[] args) {
-        System.out.println(convertDateTimeFromMySql("2000-09-05 13:28:00"));
-
-        System.out.println(convertAndPowToX("4", 3));
-        System.out.println(convertAndPowFromX(convertAndPowToX("4", 3), 3));
-        System.out.println(convertAndPowToX("4,5", 3));
-        System.out.println(convertAndPowFromX(convertAndPowToX("4,5", 3), 3));
-        System.out.println(convertAndPowToX("4,12345", 3));
-        System.out.println(convertAndPowFromX(convertAndPowToX("4,12345", 3), 3));
-        System.out.println(convertAndPowToX("4,01", 2));
-        System.out.println(convertAndPowFromX(convertAndPowToX("4,01", 2), 2));
-
-        DaoFactory df = new MySqlDaoFactory();
-        TransportDao td = df.getTransportDao();
-        for (int i = 0; i < 100; i++) {
-            Transport c = new Transport();
-            c.setName("df");
-            c.setMaxHcm(1);
-            c.setMaxLcm(11);
-            c.setMaxWcm(111);
-            c.setMaxWg(1111);
-            TransportType tt = new TransportType();
-            tt.setName("Вело");
-            c.setType(tt);
-            td.insertTransport(c);
+    public static String getDateTime(Calendar calendar) {
+        String m = calendar.get(Calendar.MONTH) + "";
+        if (m.length() < 2) {
+            m = "0" + m;
         }
-        for (Transport t : td.selectTransportTO()) {
-            System.out.println(t.getId());
+        String d = calendar.get(Calendar.DAY_OF_MONTH) + "";
+        if (d.length() < 2) {
+            d = "0" + d;
+        }
+        String h = calendar.get(Calendar.HOUR_OF_DAY) + "";
+        if (h.length() < 2) {
+            h = "0" + h;
+        }
+        String min = calendar.get(Calendar.MINUTE) + "";
+        if (min.length() < 2) {
+            min = "0" + min;
         }
 
+        return Tools.convertDateTimeFromMySql(
+                calendar.get(Calendar.YEAR)
+                + "-" + m
+                + "-" + d
+                + " " + h
+                + ":" + min)
+                + ":" + calendar.get(Calendar.SECOND);
     }
-
-    /*public int insertCustomer(...) {
-    // Реализовать здесь операцию добавления клиента.
-    // Возвратить номер созданного клиента
-    // или -1 при ошибке
-  }
-
-  public boolean deleteCustomer(...) {
-    // Реализовать здесь операцию удаления клиента.
-    // Возвратить true при успешном выполнении, false при ошибке
-  }
-
-  public Customer findCustomer(...) {
-    // Реализовать здесь операцию поиска клиента, используя
-    // предоставленные значения аргументов в качестве критерия поиска.
-    // Возвратить объект Transfer Object при успешном поиске,
-    // null или ошибку, если клиент не найден.
-  }
-
-  public boolean updateCustomer(...) {
-    // Реализовать здесь операцию обновления записи,
-    // используя данные из customerData Transfer Object
-    // Возвратить true при успешном выполнении, false при ошибке
-  }
-
-  public RowSet selectCustomersRS(...) {
-    // Реализовать здесь операцию выбора клиентов,
-    // используя предоставленный критерий.
-    // Возвратить RowSet.
-  }
-
-  public Collection selectCustomersTO(...) {
-    // Реализовать здесь операцию выбора клиентов,
-    // используя предоставленный критерий.
-    // В качестве альтернативы, реализовать возврат
-    // коллекции объектов Transfer Object.
-  }*/
 }

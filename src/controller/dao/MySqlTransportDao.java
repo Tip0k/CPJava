@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller.dao;
 
 import model.Transport;
@@ -14,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import model.TransportType;
 
-/**
- *
- * @author PEOPLE
- */
 public class MySqlTransportDao implements TransportDao {
 
     @Override
@@ -81,7 +72,7 @@ public class MySqlTransportDao implements TransportDao {
         try {
             Statement statement = MySqlDaoFactory.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("select * from transportType where transportTypeName = \'" + name + "\'");
-            
+
             if (resultSet.next()) {
                 result.setName(resultSet.getString("transportTypeName"));
                 result.setKmPerH(resultSet.getInt("transportTypeKmPerH"));
@@ -101,7 +92,7 @@ public class MySqlTransportDao implements TransportDao {
         ArrayList<Transport> result = new ArrayList<>();
         try {
             Statement statement = MySqlDaoFactory.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from transport order by transportId desc");
+            ResultSet resultSet = statement.executeQuery("select * from transport where transportId != 1 order by transportId desc");
 
             while (resultSet.next()) {
                 Transport transport = new Transport();
@@ -125,7 +116,7 @@ public class MySqlTransportDao implements TransportDao {
         ArrayList<TransportType> result = new ArrayList<>();
         try {
             Statement statement = MySqlDaoFactory.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from transportType order by transportTypeName");
+            ResultSet resultSet = statement.executeQuery("select * from transportType where transportTypeName != \'reserved\' order by transportTypeName");
 
             while (resultSet.next()) {
                 TransportType type = new TransportType();

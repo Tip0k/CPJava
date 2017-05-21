@@ -26,7 +26,7 @@ public class CourierController {
     }
 
     public boolean updateCourier(Courier courier) {
-        if (courier.getStatus().equals(CourierStatus.REWORK)) {
+        if (courier.getStatus().equals(CourierStatus.REWORK) || courier.getStatus().equals(CourierStatus.FREE)) {
             for (Order o : courierDao.selectCourierOrders(courier)) {
                 if (o.getStatus().equals(OrderStatus.IS_PERFORMED)) {
                     return false;

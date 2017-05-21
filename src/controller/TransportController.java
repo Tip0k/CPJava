@@ -17,7 +17,7 @@ public class TransportController {
     public TransportType getTransportType(String name) {
         return transportDao.findTransportType(name);
     }
-    
+
     public ArrayList<TransportType> getTransportTypes() {
         return new ArrayList<TransportType>(transportDao.selectTransportTypes());
     }

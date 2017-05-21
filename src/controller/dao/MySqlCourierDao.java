@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller.dao;
 
 import model.Transport;
@@ -15,10 +10,6 @@ import java.util.List;
 import model.Courier;
 import model.Order;
 
-/**
- *
- * @author PEOPLE
- */
 public class MySqlCourierDao implements CourierDao {
 
     private final MySqlTransportDao mySqlTransportDao;
@@ -102,7 +93,7 @@ public class MySqlCourierDao implements CourierDao {
         }
         return result;
     }
-    
+
     @Override
     public Courier findCourier(int Id) {
         Courier result = new Courier();
@@ -131,7 +122,7 @@ public class MySqlCourierDao implements CourierDao {
         ArrayList<Courier> result = new ArrayList<>();
         try {
             Statement statement = MySqlDaoFactory.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from courier order by courierId desc");
+            ResultSet resultSet = statement.executeQuery("select * from courier where courierId != 1 order by courierId desc");
 
             while (resultSet.next()) {
                 Courier courier = new Courier();

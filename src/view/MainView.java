@@ -1,17 +1,7 @@
 package view;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Toolkit;
-import java.io.IOException;
-import java.net.URL;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import model.*;
-import controller.RouteController;
-import javax.swing.JFrame;
 
 public class MainView extends javax.swing.JFrame {
 
@@ -49,6 +39,8 @@ public class MainView extends javax.swing.JFrame {
         setTitle("Робоче місце диспетчера кур'єрської служби доставки");
         setLocationByPlatform(true);
         getContentPane().setLayout(new javax.swing.OverlayLayout(getContentPane()));
+
+        jDesktopPane1.setPreferredSize(new java.awt.Dimension(975, 520));
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);

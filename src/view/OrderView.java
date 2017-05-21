@@ -1,24 +1,19 @@
 package view;
 
-import controller.CourierController;
 import controller.OrderController;
-import java.awt.Component;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import model.Courier;
-import model.CourierStatus;
 import model.Order;
 import model.OrderStatus;
 import model.Route;
@@ -44,39 +39,69 @@ public class OrderView extends javax.swing.JInternalFrame {
             @Override
             public String getToolTipText(MouseEvent e) {
                 String tip = null;
-                Point p = e.getPoint();
-                int rowIndex = rowAtPoint(p);
-                int colIndex = columnAtPoint(p);
-                int realColumnIndex = convertColumnIndexToModel(colIndex);
-                Order order = ((OrderTableModel) getModel()).getOrderByRow(rowIndex);
+                try {
+                    Point p = e.getPoint();
+                    int rowIndex = rowAtPoint(p);
+                    int colIndex = columnAtPoint(p);
+                    int realColumnIndex = convertColumnIndexToModel(colIndex);
+                    Order order = ((OrderTableModel) getModel()).getOrderByRow(rowIndex);
 
-                if (realColumnIndex == 2) {
-                    Route tmp = order.getRoute();
-                    tip = tmp.getId() + ": " + tmp.getStartPoint() + " → "
-                            + tmp.getEndPoint() + " ↔"
-                            + Tools.convertAndPowFromX(tmp.getDistanceM(), 3)
-                            + "км";
-                } else if (realColumnIndex == 3) {
-                    tip = order.getClientName() + ", " + order.getClientPhone();
-                } else if (realColumnIndex == 4) {
-                    Route tmp = order.getRoute();
-                    tip = tmp.getStartPoint() + ", " + order.getStartPointAdress();
-                } else if (realColumnIndex == 5) {
-                    Route tmp = order.getRoute();
-                    tip = tmp.getEndPoint() + ", " + order.getEndPointAdress();
-                } else if (realColumnIndex == 6) {
-                    Courier tmp = order.getCourier();
-                    tip = tmp.getName() + ", " + tmp.getPhone() + ", " + tmp.getTransport().getName();
-                } else if (realColumnIndex == 8) {
-                    tip = order.getOrderDate();
-                } else if (realColumnIndex == 9) {
-                    tip = order.getDoneDate() + ", затримка " + Tools.convertFromMinutes(order.getDelayMin());
-                } else {
-                    tip = super.getToolTipText(e);
+                    if (realColumnIndex == 2) {
+                        Route tmp = order.getRoute();
+                        tip = tmp.toString();
+                    } else if (realColumnIndex == 3) {
+                        tip = order.getClientName() + ", " + order.getClientPhone();
+                    } else if (realColumnIndex == 4) {
+                        Route tmp = order.getRoute();
+                        tip = tmp.getStartPoint() + ", " + order.getStartPointAdress();
+                    } else if (realColumnIndex == 5) {
+                        Route tmp = order.getRoute();
+                        tip = tmp.getEndPoint() + ", " + order.getEndPointAdress();
+                    } else if (realColumnIndex == 6) {
+                        Courier tmp = order.getCourier();
+                        tip = tmp.getName() + ", " + tmp.getPhone() + ", " + tmp.getTransport().getName();
+                    } else if (realColumnIndex == 7) {
+                        tip = order.getTariff().toString();
+                    } else if (realColumnIndex == 9) {
+                        tip = order.getOrderDate();
+                    } else if (realColumnIndex == 10) {
+                        tip = order.getDoneDate() + ", затримка " + Tools.convertFromMinutes(order.getDelayMin());
+                    } else {
+                        tip = super.getToolTipText(e);
+                    }
+                } catch (Exception ex) {
+                    tip = "";
                 }
                 return tip;
             }
         };
+        orderTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int orderId = Integer.parseInt(orderTable.getValueAt(getSelectedRowInOrderTable(), 1).toString());
+                    java.awt.EventQueue.invokeLater(new Runnable() {
+                        public void run() {
+                            try {
+                                Order o = orderController.getOrder(orderId);
+                                if (o.getStatus().equals(OrderStatus.IS_PERFORMED) || o.getStatus().equals(OrderStatus.DONE)) {
+                                    return;
+                                } else {
+                                    AddOrderView addOrderView = AddOrderView.getChangeOrderView(orderController, o);
+                                    addOrderView.setLocation(orderView.getLocation().x + orderView.getWidth() / 2 - addOrderView.getWidth() / 2,
+                                            orderView.getLocation().y + 30);
+                                    orderView.getParent().add(addOrderView);
+                                    addOrderView.toFront();
+                                    addOrderView.setSelected(true);
+                                }
+                            } catch (Exception ex) {
+                                MainView.showErrorPane("Помилка при читанні запису з БД.", ex);
+                            }
+                        }
+                    });
+                }
+            }
+        });
         updateTableOrders();
     }
 
@@ -101,10 +126,12 @@ public class OrderView extends javax.swing.JInternalFrame {
             orderTable.getColumnModel().getColumn(4).setMinWidth(70);
             orderTable.getColumnModel().getColumn(5).setMinWidth(70);
             orderTable.getColumnModel().getColumn(6).setMinWidth(70);
-            orderTable.getColumnModel().getColumn(7).setMinWidth(70);
+            orderTable.getColumnModel().getColumn(7).setMinWidth(50);
+            orderTable.getColumnModel().getColumn(7).setMaxWidth(50);
             orderTable.getColumnModel().getColumn(8).setMinWidth(70);
             orderTable.getColumnModel().getColumn(9).setMinWidth(70);
             orderTable.getColumnModel().getColumn(10).setMinWidth(70);
+            orderTable.getColumnModel().getColumn(11).setMinWidth(70);
             jScrollPane2.setViewportView(orderTable);
             setColumnEditor();
             orderTable.updateUI();
@@ -121,7 +148,7 @@ public class OrderView extends javax.swing.JInternalFrame {
             status.addItem(s);
         }
 
-        TableColumn tc = orderTable.getColumnModel().getColumn(10);
+        TableColumn tc = orderTable.getColumnModel().getColumn(11);
         tc.setCellEditor(new DefaultCellEditor(status));
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setToolTipText("Натисніть щоб змінити статус");
@@ -148,7 +175,7 @@ public class OrderView extends javax.swing.JInternalFrame {
 
         @Override
         public int getColumnCount() {
-            return 11;
+            return 12;
         }
 
         @Override
@@ -169,12 +196,14 @@ public class OrderView extends javax.swing.JInternalFrame {
                 case 6:
                     return "Кур'єр";
                 case 7:
-                    return "Вартість (грн)";
+                    return "Тариф";
                 case 8:
-                    return "Дата замов.";
+                    return "Вартість (грн)";
                 case 9:
-                    return "Дата викон.";
+                    return "Дата замов.";
                 case 10:
+                    return "Дата викон.";
+                case 11:
                     return "Статус";
                 default:
                     return "";
@@ -183,7 +212,7 @@ public class OrderView extends javax.swing.JInternalFrame {
 
         @Override
         public Class<?> getColumnClass(int columnIndex) {
-            if (columnIndex == 10) {
+            if (columnIndex == 11) {
                 return JComboBox.class;
             } else {
                 return String.class;
@@ -192,7 +221,7 @@ public class OrderView extends javax.swing.JInternalFrame {
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            if (columnIndex == 10) {
+            if (columnIndex == 11) {
                 return true;
             } else {
                 return false;
@@ -217,12 +246,14 @@ public class OrderView extends javax.swing.JInternalFrame {
                 case 6:
                     return orders.get(rowIndex).getCourier().getName();
                 case 7:
-                    return Tools.convertAndPowFromX(orders.get(rowIndex).getCostUahC(), 2);
+                    return orders.get(rowIndex).getTariff().getId();
                 case 8:
-                    return Tools.convertDateTimeFromMySql(orders.get(rowIndex).getOrderDate());
+                    return Tools.convertAndPowFromX(orders.get(rowIndex).getCostUahC(), 2);
                 case 9:
-                    return Tools.convertDateTimeFromMySql(orders.get(rowIndex).getDoneDate());
+                    return Tools.convertDateTimeFromMySql(orders.get(rowIndex).getOrderDate());
                 case 10:
+                    return Tools.convertDateTimeFromMySql(orders.get(rowIndex).getDoneDate());
+                case 11:
                     return orders.get(rowIndex).getStatus();
                 default:
                     return "Error";
@@ -231,15 +262,21 @@ public class OrderView extends javax.swing.JInternalFrame {
 
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            if (columnIndex != 10) {
+            if (columnIndex != 11) {
                 return;
             }
             Order order = orders.get(rowIndex);
+            if (order.getStatus().equals(OrderStatus.UNKNOWN)) {
+                MainView.showErrorPane("Неможливо змінити статус замовлення.",
+                        new IllegalArgumentException("Замовлення не підтверджено."));
+                updateTableOrders();
+                return;
+            }
             order.setStatus(aValue.toString());
             if (orderController.updateOrder(order)) {
                 orders.set(rowIndex, order);
             } else {
-                MainView.showErrorPane("Неможливо змінити статус замовлення.", 
+                MainView.showErrorPane("Неможливо змінити статус замовлення.",
                         new IllegalArgumentException("Змініть статус кур'єра."));
                 updateTableOrders();
             }
@@ -310,7 +347,7 @@ public class OrderView extends javax.swing.JInternalFrame {
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 452, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 508, Short.MAX_VALUE)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -328,6 +365,19 @@ public class OrderView extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private int getSelectedRowInOrderTable() {
+        if (orderTable.isColumnSelected(0) || orderTable.isColumnSelected(1)
+                || orderTable.isColumnSelected(2) || orderTable.isColumnSelected(3)
+                || orderTable.isColumnSelected(4) || orderTable.isColumnSelected(5)
+                || orderTable.isColumnSelected(6) || orderTable.isColumnSelected(7)
+                || orderTable.isColumnSelected(8) || orderTable.isColumnSelected(9)
+                || orderTable.isColumnSelected(10) || orderTable.isColumnSelected(11)
+                || orderTable.isColumnSelected(12)) {
+            return orderTable.getSelectedRow();
+        }
+        return -1;
+    }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -350,10 +400,8 @@ public class OrderView extends javax.swing.JInternalFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    if (orderTable.isColumnSelected(0) || orderTable.isColumnSelected(1)
-                            || orderTable.isColumnSelected(2) || orderTable.isColumnSelected(3)
-                            || orderTable.isColumnSelected(4) || orderTable.isColumnSelected(5)) {
-                        int Id = Integer.parseInt(orderTable.getValueAt(orderTable.getSelectedRow(), 1).toString());
+                    if (getSelectedRowInOrderTable() != -1) {
+                        int Id = Integer.parseInt(orderTable.getValueAt(getSelectedRowInOrderTable(), 1).toString());
                         orderController.deleteOrder(Id);
                         updateTableOrders();
                     } else {

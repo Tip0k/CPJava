@@ -3,19 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/model/CourierStatus.java</file>
-            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/controller/TariffController.java</file>
-            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/model/OrderStatus.java</file>
-            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/view/MainView.java</file>
-            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/controller/CourierController.java</file>
-            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/model/Tools.java</file>
-            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/model/Order.java</file>
+            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/controller/dao/MySqlOrderDao.java</file>
             <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/view/OrderView.java</file>
+            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/view/AddOrderView.java</file>
             <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/controller/OrderController.java</file>
             <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/view/CourierView.java</file>
             <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/controller/dao/OrderDao.java</file>
+            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/view/MainView.java</file>
+            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/model/Tools.java</file>
             <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/controller/dao/MySqlCourierDao.java</file>
-            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/controller/dao/CourierDao.java</file>
+            <file>file:/C:/Users/PEOPLE/Documents/NetBeansProjects/CPJava/src/controller/CourierController.java</file>
         </group>
     </open-files>
 </project-private>

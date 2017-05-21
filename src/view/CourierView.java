@@ -16,7 +16,7 @@ import model.CourierStatus;
 public class CourierView extends javax.swing.JInternalFrame {
 
     private static CourierView courierView;
-    private CourierController courierController;
+    private final CourierController courierController;
 
     private CourierView() {
         courierController = new CourierController();

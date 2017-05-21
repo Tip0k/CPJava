@@ -3,15 +3,16 @@ package controller.dao;
 import java.util.List;
 import model.Courier;
 import model.Order;
+import model.Tariff;
+import model.TransportType;
 
-/**
- *
- * @author PEOPLE
- */
 public interface OrderDao {
 
-    //public boolean insertCourier(Courier courier);
     public Courier findCourier(int Id);
+
+    public boolean insertOrder(Order order);
+
+    public boolean changeOrder(Order order);
 
     public boolean deleteOrder(Order order);
 
@@ -21,5 +22,8 @@ public interface OrderDao {
 
     public List<Order> selectOrderTO();
 
-    //public List<Transport> selectFreeTransport();
+    public List<Courier> selectCouriers(String courierStatus, int maxWg,
+            int maxWcm, int maxHcm, int maxLcm, int maxDistanceM);
+
+    public List<Tariff> selectTariffs(TransportType type);
 }

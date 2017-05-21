@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
-/**
- *
- * @author PEOPLE
- */
 public class Route implements java.io.Serializable {
 
     private int Id;
@@ -46,5 +37,13 @@ public class Route implements java.io.Serializable {
 
     public int getId() {
         return Id;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + ": " + getStartPoint() + " → "
+                + getEndPoint() + " ↔"
+                + Tools.convertAndPowFromX(getDistanceM(), 3)
+                + "км";
     }
 }

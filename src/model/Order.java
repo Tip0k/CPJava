@@ -1,15 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
-/**
- *
- * @author PEOPLE
- */
+import java.util.ArrayList;
+
 public class Order {
+
     private int Id;
     private Route route;
     private String startPointAdress;
@@ -17,11 +11,21 @@ public class Order {
     private String clientName;
     private String clientPhone;
     private Courier courier;
+    private Tariff tariff;
     private int costUahC;
     private String orderDate;
     private String doneDate;
     private int delayMin;
     private String status;
+    private ArrayList<OrderItem> content;
+
+    public void setTariff(Tariff tariff) {
+        this.tariff = tariff;
+    }
+
+    public void setContent(ArrayList<OrderItem> content) {
+        this.content = content;
+    }
 
     public void setId(int Id) {
         this.Id = Id;
@@ -71,6 +75,14 @@ public class Order {
         this.status = status;
     }
 
+    public Tariff getTariff() {
+        return tariff;
+    }
+
+    public ArrayList<OrderItem> getContent() {
+        return content;
+    }
+
     public int getId() {
         return Id;
     }
@@ -117,5 +129,9 @@ public class Order {
 
     public String getStatus() {
         return status;
+    }
+
+    public void addOrderItem(OrderItem oi) {
+        content.add(oi);
     }
 }

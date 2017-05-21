@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller.dao;
 
 import java.sql.PreparedStatement;
@@ -14,10 +9,6 @@ import java.util.List;
 import model.Tariff;
 import model.TransportType;
 
-/**
- *
- * @author PEOPLE
- */
 public class MySqlTariffDao implements TariffDao {
 
     private final MySqlTransportDao mySqlTransportDao;
@@ -84,7 +75,7 @@ public class MySqlTariffDao implements TariffDao {
         ArrayList<Tariff> result = new ArrayList<>();
         try {
             Statement statement = MySqlDaoFactory.getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from tariff order by tariffId desc");
+            ResultSet resultSet = statement.executeQuery("select * from tariff where tariffId != 1 order by tariffId desc");
 
             while (resultSet.next()) {
                 Tariff tariff = new Tariff();
